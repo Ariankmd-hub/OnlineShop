@@ -1,11 +1,19 @@
 
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Domain.IRepository;
 using OnlineShop.Infrastructure.Persistence;
+using OnlineShop.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add Scooped
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 // Add services to the container.
