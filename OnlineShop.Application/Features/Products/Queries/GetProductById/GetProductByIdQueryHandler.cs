@@ -13,7 +13,8 @@ namespace OnlineShop.Application.Features.Products.Queries.GetProductById
             _productRepository = productRepository;
         }
 
-        public async Task<GetProductByIdResponse?> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetProductByIdResponse?> 
+            Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
         {
             Product? product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
             if (product == null) 
