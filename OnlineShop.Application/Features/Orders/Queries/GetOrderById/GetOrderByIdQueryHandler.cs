@@ -7,15 +7,15 @@ namespace OnlineShop.Application.Features.Orders.Queries.GetOrderById
     public class GetOrderByIdQueryHandler : 
         IRequestHandler<GetOrderByIdQuery, Order>
     {
-        private readonly IGenericRepository<Order> _orderRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public GetOrderByIdQueryHandler(IGenericRepository<Order> orderRepository)
+        public GetOrderByIdQueryHandler(IOrderRepository orderRepository)
         {
          _orderRepository = orderRepository;   
         }
         public async Task<Order> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            Order? order = await _orderRepository.GetByIdAsync(request.OrderId, cancellationToken);
+            Order? order = await _orderRepository.GetOrderWithItemsAsync(request.OrderId, cancellationToken);
             if (order == null) 
             {
                 throw new KeyNotFoundException($"There is no Order with {request.OrderId} Id");

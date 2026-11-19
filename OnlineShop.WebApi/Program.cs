@@ -1,10 +1,16 @@
 
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Application.Features.Products.Queries.GetAllProducts;
 using OnlineShop.Domain.IRepository;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add MediaR
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(
+        typeof(GetAllProductsQuery).Assembly));
+
 
 // Add Db Context
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -16,6 +22,10 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+
 
 
 // Add services to the container.
