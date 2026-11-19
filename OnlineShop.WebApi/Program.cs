@@ -1,15 +1,21 @@
 
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.Application.Common.Behaviors;
 using OnlineShop.Application.Features.Products.Queries.GetAllProducts;
 using OnlineShop.Domain.IRepository;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repository;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add MediaR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(
         typeof(GetAllProductsQuery).Assembly));
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 
 // Add Db Context

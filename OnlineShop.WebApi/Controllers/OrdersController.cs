@@ -21,8 +21,8 @@ namespace OnlineShop.WebApi.Controllers
         {
             try
             {
-                var cart = await _mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
-                return Ok(cart);
+                var order = await _mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
+                return Ok(order);
             }
             catch (KeyNotFoundException)
             {
