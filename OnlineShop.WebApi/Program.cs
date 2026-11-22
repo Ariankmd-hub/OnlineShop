@@ -7,14 +7,18 @@ using OnlineShop.Application.Features.Products.Queries.GetAllProducts;
 using OnlineShop.Domain.IRepository;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repository;
-using System.Reflection;
+using OnlineShop.WebApi.Exceptions;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add MediaR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(
         typeof(GetAllProductsQuery).Assembly));
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddValidatorsFromAssembly(typeof(GetAllProductsQuery).Assembly);
+
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 
@@ -39,14 +43,28 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// exception
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
+
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 
